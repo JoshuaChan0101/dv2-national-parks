@@ -1,0 +1,478 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 700,
+ "height": 400,
+ "title": {
+  "text": "Do bigger parks hold more species?",
+  "subtitle": "Each dot is a park. The line shows the typical trend."
+ },
+ "data": {
+  "url": "data/park_species.csv"
+ },
+ "transform": [
+  {
+   "calculate": "indexof(['Critically Endangered','Endangered','Vulnerable'],datum.status)>=0?1:0",
+   "as": "thr"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "count",
+     "as": "richness"
+    },
+    {
+     "op": "sum",
+     "field": "records",
+     "as": "obs"
+    },
+    {
+     "op": "sum",
+     "field": "thr",
+     "as": "threatened"
+    }
+   ],
+   "groupby": [
+    "park"
+   ]
+  },
+  {
+   "lookup": "park",
+   "from": {
+    "data": {
+     "url": "data/parks.csv"
+    },
+    "key": "park",
+    "fields": [
+     "lat",
+     "lon",
+     "state",
+     "area_ha"
+    ]
+   }
+  }
+ ],
+ "layer": [
+  {
+   "mark": {
+    "type": "point",
+    "filled": true,
+    "size": 90,
+    "color": "#3E6B58",
+    "opacity": 0.85
+   },
+   "encoding": {
+    "x": {
+     "field": "area_ha",
+     "type": "quantitative",
+     "scale": {
+      "type": "log"
+     },
+     "title": "Park size (hectares, log scale)",
+     "axis": {
+      "format": "~s"
+     }
+    },
+    "y": {
+     "field": "richness",
+     "type": "quantitative",
+     "scale": {
+      "type": "log",
+      "zero": false,
+      "domain": [
+       120,
+       700
+      ]
+     },
+     "title": "Species recorded (log scale)",
+     "axis": {
+      "values": [
+       150,
+       200,
+       300,
+       400,
+       500,
+       600
+      ]
+     }
+    },
+    "tooltip": [
+     {
+      "field": "park"
+     },
+     {
+      "field": "richness",
+      "title": "Species"
+     },
+     {
+      "field": "area_ha",
+      "title": "Hectares",
+      "format": ","
+     }
+    ]
+   }
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 8,
+    "fontSize": 10
+   },
+   "encoding": {
+    "x": {
+     "field": "area_ha",
+     "type": "quantitative",
+     "scale": {
+      "type": "log"
+     },
+     "title": "Park size (hectares, log scale)",
+     "axis": {
+      "format": "~s"
+     }
+    },
+    "y": {
+     "field": "richness",
+     "type": "quantitative",
+     "scale": {
+      "type": "log",
+      "zero": false,
+      "domain": [
+       120,
+       700
+      ]
+     },
+     "title": "Species recorded (log scale)",
+     "axis": {
+      "values": [
+       150,
+       200,
+       300,
+       400,
+       500,
+       600
+      ]
+     }
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park!='Kalbarri' && datum.park!='Ikara-Flinders Ranges'"
+    }
+   ]
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 8,
+    "fontSize": 10,
+    "dy": 10
+   },
+   "encoding": {
+    "x": {
+     "field": "area_ha",
+     "type": "quantitative",
+     "scale": {
+      "type": "log"
+     },
+     "title": "Park size (hectares, log scale)",
+     "axis": {
+      "format": "~s"
+     }
+    },
+    "y": {
+     "field": "richness",
+     "type": "quantitative",
+     "scale": {
+      "type": "log",
+      "zero": false,
+      "domain": [
+       120,
+       700
+      ]
+     },
+     "title": "Species recorded (log scale)",
+     "axis": {
+      "values": [
+       150,
+       200,
+       300,
+       400,
+       500,
+       600
+      ]
+     }
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park=='Kalbarri'"
+    }
+   ]
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 8,
+    "fontSize": 10,
+    "dy": -10
+   },
+   "encoding": {
+    "x": {
+     "field": "area_ha",
+     "type": "quantitative",
+     "scale": {
+      "type": "log"
+     },
+     "title": "Park size (hectares, log scale)",
+     "axis": {
+      "format": "~s"
+     }
+    },
+    "y": {
+     "field": "richness",
+     "type": "quantitative",
+     "scale": {
+      "type": "log",
+      "zero": false,
+      "domain": [
+       120,
+       700
+      ]
+     },
+     "title": "Species recorded (log scale)",
+     "axis": {
+      "values": [
+       150,
+       200,
+       300,
+       400,
+       500,
+       600
+      ]
+     }
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park=='Ikara-Flinders Ranges'"
+    }
+   ]
+  },
+  {
+   "transform": [
+    {
+     "calculate": "log(datum.area_ha)/log(10)",
+     "as": "la"
+    },
+    {
+     "calculate": "log(datum.richness)/log(10)",
+     "as": "lr"
+    },
+    {
+     "regression": "lr",
+     "on": "la",
+     "method": "linear"
+    },
+    {
+     "calculate": "pow(10,datum.la)",
+     "as": "area_ha"
+    },
+    {
+     "calculate": "pow(10,datum.lr)",
+     "as": "richness"
+    }
+   ],
+   "mark": {
+    "type": "line",
+    "color": "#C98A2B",
+    "strokeWidth": 2.5
+   },
+   "encoding": {
+    "x": {
+     "field": "area_ha",
+     "type": "quantitative",
+     "scale": {
+      "type": "log"
+     },
+     "title": "Park size (hectares, log scale)",
+     "axis": {
+      "format": "~s"
+     }
+    },
+    "y": {
+     "field": "richness",
+     "type": "quantitative",
+     "scale": {
+      "type": "log",
+      "zero": false,
+      "domain": [
+       120,
+       700
+      ]
+     },
+     "title": "Species recorded (log scale)",
+     "axis": {
+      "values": [
+       150,
+       200,
+       300,
+       400,
+       500,
+       600
+      ]
+     }
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "k": 1
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "More species than their size suggests:",
+     "Daintree, Blue Mountains, Wilsons Promontory"
+    ],
+    "align": "left",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 4
+   },
+   "encoding": {
+    "x": {
+     "datum": 17500,
+     "type": "quantitative"
+    },
+    "y": {
+     "datum": 640,
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "k": 1
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "More species than their size suggests:",
+     "Daintree, Blue Mountains, Wilsons Promontory"
+    ],
+    "align": "left",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#7A2E1D"
+   },
+   "encoding": {
+    "x": {
+     "datum": 17500,
+     "type": "quantitative"
+    },
+    "y": {
+     "datum": 640,
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "k": 1
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "Fewer species than its size suggests"
+    ],
+    "align": "left",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 4
+   },
+   "encoding": {
+    "x": {
+     "datum": 200000,
+     "type": "quantitative"
+    },
+    "y": {
+     "datum": 138,
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "k": 1
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "Fewer species than its size suggests"
+    ],
+    "align": "left",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#7A2E1D"
+   },
+   "encoding": {
+    "x": {
+     "datum": 200000,
+     "type": "quantitative"
+    },
+    "y": {
+     "datum": 138,
+     "type": "quantitative"
+    }
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

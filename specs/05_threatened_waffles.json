@@ -1,0 +1,122 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "title": {
+  "text": "Threatened animals inside each park",
+  "subtitle": "One square = one nationally threatened species recorded in the park"
+ },
+ "data": {
+  "url": "data/park_species.csv"
+ },
+ "transform": [
+  {
+   "filter": "indexof(['Critically Endangered','Endangered','Vulnerable'],datum.status)>=0"
+  },
+  {
+   "calculate": "indexof(['Critically Endangered','Endangered','Vulnerable'],datum.status)",
+   "as": "ord"
+  },
+  {
+   "window": [
+    {
+     "op": "row_number",
+     "as": "n"
+    }
+   ],
+   "sort": [
+    {
+     "field": "ord"
+    },
+    {
+     "field": "class"
+    }
+   ],
+   "groupby": [
+    "park"
+   ]
+  },
+  {
+   "calculate": "floor((datum.n-1)/8)",
+   "as": "r"
+  },
+  {
+   "calculate": "(datum.n-1)%8",
+   "as": "c"
+  }
+ ],
+ "facet": {
+  "field": "park",
+  "type": "nominal",
+  "title": null,
+  "header": {
+   "labelFont": "Fraunces",
+   "labelFontSize": 12,
+   "labelAnchor": "start"
+  }
+ },
+ "spec": {
+  "width": 90,
+  "height": 90,
+  "mark": {
+   "type": "square",
+   "size": 60
+  },
+  "encoding": {
+   "x": {
+    "field": "c",
+    "type": "ordinal",
+    "axis": null
+   },
+   "y": {
+    "field": "r",
+    "type": "ordinal",
+    "axis": null
+   },
+   "color": {
+    "field": "status",
+    "type": "nominal",
+    "scale": {
+     "domain": [
+      "Critically Endangered",
+      "Endangered",
+      "Vulnerable"
+     ],
+     "range": [
+      "#7A2E1D",
+      "#C98A2B",
+      "#8FB59C"
+     ]
+    },
+    "legend": {
+     "title": "Status"
+    }
+   },
+   "tooltip": [
+    {
+     "field": "common",
+     "title": "Animal"
+    },
+    {
+     "field": "class",
+     "title": "Group"
+    },
+    {
+     "field": "status"
+    }
+   ]
+  }
+ },
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ },
+ "columns": 4
+}

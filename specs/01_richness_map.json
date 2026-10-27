@@ -1,0 +1,409 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 760,
+ "height": 520,
+ "title": {
+  "text": "Which parks hold the most wildlife?",
+  "subtitle": "Circle size = species recorded in the park. Colour = how many of those are nationally threatened."
+ },
+ "data": {
+  "url": "data/park_species.csv"
+ },
+ "transform": [
+  {
+   "calculate": "indexof(['Critically Endangered','Endangered','Vulnerable'],datum.status)>=0?1:0",
+   "as": "thr"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "count",
+     "as": "richness"
+    },
+    {
+     "op": "sum",
+     "field": "records",
+     "as": "obs"
+    },
+    {
+     "op": "sum",
+     "field": "thr",
+     "as": "threatened"
+    }
+   ],
+   "groupby": [
+    "park"
+   ]
+  },
+  {
+   "lookup": "park",
+   "from": {
+    "data": {
+     "url": "data/parks.csv"
+    },
+    "key": "park",
+    "fields": [
+     "lat",
+     "lon",
+     "state",
+     "area_ha"
+    ]
+   }
+  }
+ ],
+ "projection": {
+  "type": "albers",
+  "rotate": [
+   -134,
+   0
+  ],
+  "center": [
+   0,
+   -27
+  ],
+  "parallels": [
+   -18,
+   -36
+  ],
+  "scale": 800
+ },
+ "layer": [
+  {
+   "data": {
+    "url": "data/states.topojson",
+    "format": {
+     "type": "topojson",
+     "feature": "states"
+    }
+   },
+   "mark": {
+    "type": "geoshape",
+    "fill": "#DCE2D6",
+    "stroke": "#fff",
+    "strokeWidth": 1
+   }
+  },
+  {
+   "mark": {
+    "type": "circle",
+    "stroke": "#fff",
+    "opacity": 0.85
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "size": {
+     "field": "richness",
+     "type": "quantitative",
+     "scale": {
+      "type": "sqrt",
+      "range": [
+       60,
+       2400
+      ]
+     },
+     "legend": {
+      "title": "Species recorded"
+     }
+    },
+    "color": {
+     "field": "threatened",
+     "type": "quantitative",
+     "scale": {
+      "scheme": "oranges"
+     },
+     "legend": {
+      "title": "Threatened species"
+     }
+    },
+    "tooltip": [
+     {
+      "field": "park",
+      "title": "Park"
+     },
+     {
+      "field": "state"
+     },
+     {
+      "field": "richness",
+      "title": "Species"
+     },
+     {
+      "field": "threatened",
+      "title": "Threatened"
+     },
+     {
+      "field": "obs",
+      "title": "Sightings",
+      "format": ","
+     }
+    ]
+   }
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 0,
+    "fontSize": 10,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 3.5
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park!='Freycinet'"
+    }
+   ]
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 0,
+    "fontSize": 10,
+    "fill": "#1F2A24"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park!='Freycinet'"
+    }
+   ]
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 13,
+    "fontSize": 10,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 3.5
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park=='Freycinet'"
+    }
+   ]
+  },
+  {
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 13,
+    "fontSize": 10,
+    "fill": "#1F2A24"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   },
+   "transform": [
+    {
+     "filter": "datum.park=='Freycinet'"
+    }
+   ]
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "lon": 128.3,
+      "lat": -13.0
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "Most species (551)",
+     "and most threatened (41)"
+    ],
+    "align": "right",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 4
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "lon": 128.3,
+      "lat": -13.0
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "Most species (551)",
+     "and most threatened (41)"
+    ],
+    "align": "right",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#7A2E1D"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "lon": 143.2,
+      "lat": -42.6
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "Fewest species (158)"
+    ],
+    "align": "right",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 4
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "lon": 143.2,
+      "lat": -42.6
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "text": [
+     "Fewest species (158)"
+    ],
+    "align": "right",
+    "fontSize": 11,
+    "fontStyle": "italic",
+    "fontWeight": 600,
+    "fill": "#7A2E1D"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    }
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

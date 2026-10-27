@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="YOUR NAME">
+<meta name="description" content="A data story about wildlife in Australia's national parks.">
+<title>Life Inside the Fence: Wildlife in Australia's National Parks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+<style>
+:root{--ink:#1F2A24;--muted:#5a665f;--bg:#EDEFE8;--gum:#3E6B58;--ochre:#C98A2B;--rule:#c9d0c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Public Sans",sans-serif}
+main{max-width:860px;margin:0 auto;padding:0 24px 80px}
+header{padding:72px 0 40px;border-bottom:3px solid var(--gum)}
+h1{font:900 clamp(2.4rem,6vw,4rem)/1.05 Fraunces,serif;margin:0 0 20px;letter-spacing:-.02em}
+h2{font:700 1.7rem/1.2 Fraunces,serif;margin:0 0 12px}
+h3{font:700 1.1rem Fraunces,serif;margin:24px 0 6px}
+p{max-width:64ch;margin:0 0 1em}
+.lede{font:400 1.25rem/1.5 Fraunces,serif;max-width:56ch}
+.by{color:var(--muted);font-size:.9rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:32px}
+.stats b{display:block;font:900 2.2rem Fraunces,serif;color:var(--gum)}
+.stats span{font-size:.85rem;color:var(--muted)}
+section{padding:56px 0 8px;border-bottom:1px solid var(--rule)}
+figure{margin:24px 0 8px}
+figcaption{font-size:.85rem;color:var(--muted);max-width:64ch}
+.note{border-left:4px solid var(--ochre);padding:4px 16px;margin:20px 0}
+footer{padding-top:40px;font-size:.85rem;color:var(--muted)}
+footer h3{color:var(--ink)} footer a{color:var(--gum)}
+.vega-bind{margin:6px 0;font-size:.9rem}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body><main>
+
+<header>
+  <h1>Life inside the fence</h1>
+  <p class="lede">Australia protects some of its best wildlife habitat as national parks. This page compares [N] of them: how many species each holds, which threatened animals they shelter, and when visitors spot them.</p>
+  <p class="by">By YOUR NAME · FIT3179 Data Visualisation 2 · Monash University · October 2026</p>
+  <!-- Fill these four from YOUR data. Do not publish placeholder numbers. -->
+  <div class="stats">
+    <div><b>[ ]</b><span>national parks compared</span></div>
+    <div><b>[ ]</b><span>species recorded across them</span></div>
+    <div><b>[ ]</b><span>nationally threatened species among them</span></div>
+    <div><b>[ ]</b><span>sightings logged</span></div>
+  </div>
+</header>
+
+<section>
+  <h2>Which parks hold the most wildlife?</h2>
+  <p>[Name the richest and poorest park. Explain "species recorded" in plain words and say that more records can also mean more visitors.]</p>
+  <figure><div id="v1"></div><figcaption>Sources: Atlas of Living Australia; CAPAD 2024, DCCEEW.</figcaption></figure>
+  <figure><div id="v9"></div></figure>
+  <div class="note"><p>[Annotation: what the trend line says about park size and species, and which park sits well above or below it.]</p></div>
+</section>
+
+<section>
+  <h2>Who lives where?</h2>
+  <p>[Introduce the four animal groups. Point out one park that is strong in birds but weak in mammals, or the reverse.]</p>
+  <figure><div id="v2"></div></figure>
+  <figure><div id="v4"></div></figure>
+  <p>[Invite the reader to pick an animal below and see which parks it turns up in.]</p>
+  <figure><div id="v3"></div></figure>
+</section>
+
+<section>
+  <h2>Why protected areas matter</h2>
+  <p>[Explain "threatened": Critically Endangered, Endangered, Vulnerable. Say that parks give these animals safe habitat.]</p>
+  <figure><div id="v5"></div><figcaption>Source: Atlas of Living Australia records with national conservation status.</figcaption></figure>
+  <figure><div id="v10"></div></figure>
+  <figure><div id="v6"></div></figure>
+  <div class="note"><p>[Annotation: which park does best on several measures and which stands out for threatened species.]</p></div>
+</section>
+
+<section>
+  <h2>When do visitors see wildlife?</h2>
+  <p>[Say who logs sightings (visitors and citizen scientists) and what that means for reading the charts.]</p>
+  <figure><div id="v8"></div></figure>
+  <figure><div id="v7"></div></figure>
+</section>
+
+<footer>
+  <h3>Data sources</h3>
+  <ul>
+    <li>CAPAD 2024, DCCEEW, <a href="https://data.gov.au/data/dataset/6f980342-3a58-4a47-adb2-a178cd6748c2">data.gov.au</a>.</li>
+    <li>Atlas of Living Australia occurrence records within each park, <a href="https://www.ala.org.au">ala.org.au</a> (add your download DOI and date).</li>
+    <li>State boundaries: <a href="https://github.com/rowanhogan/australian-states">rowanhogan/australian-states</a>, converted to TopoJSON.</li>
+  </ul>
+  <h3>Notes</h3><p>[State exactly what you changed in each file, e.g. columns removed.]</p>
+  <h3>Author</h3><p>YOUR NAME · Created October 2026 for FIT3179, Monash University.</p>
+  <h3>Use of AI</h3><p>Generative AI (Claude, Anthropic) was used to help draft chart code. [List any other use.]</p>
+</footer>
+
+</main>
+<script>
+const specs = {
+  v1:"01_richness_map", v2:"02_animal_group_maps", v3:"03_species_finder_map", v4:"04_park_group_heatmap",
+  v5:"05_threatened_waffles", v6:"06_parallel_coordinates", v7:"07_observations_streamgraph",
+  v8:"08_park_season_heatmap", v9:"09_species_area_scatter", v10:"10_most_seen_threatened"
+};
+for (const [id, f] of Object.entries(specs))
+  vegaEmbed("#"+id, "specs/"+f+".json", {actions:false}).catch(e=>console.error(f, e));
+</script>
+</body></html>

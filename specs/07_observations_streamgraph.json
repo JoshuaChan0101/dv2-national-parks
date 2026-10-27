@@ -1,0 +1,146 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 760,
+ "height": 300,
+ "title": {
+  "text": "Sightings logged in these parks, year by year",
+  "subtitle": "Thickness = number of sightings recorded, by animal group"
+ },
+ "layer": [
+  {
+   "data": {
+    "url": "data/observations.csv"
+   },
+   "transform": [
+    {
+     "filter": "indexof(['Birds','Mammals','Reptiles','Frogs'],datum.class)>=0 && datum.year<2026"
+    },
+    {
+     "aggregate": [
+      {
+       "op": "sum",
+       "field": "records",
+       "as": "n"
+      }
+     ],
+     "groupby": [
+      "year",
+      "class"
+     ]
+    },
+    {
+     "calculate": "datetime(datum.year,0,1)",
+     "as": "d"
+    }
+   ],
+   "mark": {
+    "type": "area",
+    "interpolate": "monotone"
+   },
+   "encoding": {
+    "x": {
+     "field": "d",
+     "type": "temporal",
+     "timeUnit": "year",
+     "title": null
+    },
+    "y": {
+     "field": "n",
+     "type": "quantitative",
+     "stack": "center",
+     "axis": null
+    },
+    "color": {
+     "field": "class",
+     "type": "nominal",
+     "scale": {
+      "scheme": "tableau10"
+     },
+     "legend": {
+      "title": "Group"
+     }
+    },
+    "tooltip": [
+     {
+      "field": "class"
+     },
+     {
+      "field": "year"
+     },
+     {
+      "field": "n",
+      "title": "Sightings",
+      "format": ","
+     }
+    ]
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "t": "2020: bushfires and COVID-19"
+     }
+    ]
+   },
+   "mark": {
+    "type": "rule",
+    "strokeDash": [
+     4,
+     3
+    ],
+    "color": "#1F2A24"
+   },
+   "encoding": {
+    "x": {
+     "datum": {
+      "year": 2020
+     },
+     "type": "temporal"
+    }
+   }
+  },
+  {
+   "data": {
+    "values": [
+     {
+      "t": "2020: bushfires and COVID-19"
+     }
+    ]
+   },
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 5,
+    "fontSize": 11
+   },
+   "encoding": {
+    "x": {
+     "datum": {
+      "year": 2020
+     },
+     "type": "temporal"
+    },
+    "y": {
+     "value": 10
+    },
+    "text": {
+     "field": "t"
+    }
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

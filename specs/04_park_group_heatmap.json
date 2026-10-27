@@ -1,0 +1,99 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 420,
+ "height": {
+  "step": 28
+ },
+ "title": {
+  "text": "The mix of wildlife in each park",
+  "subtitle": "Number of species recorded, by park and animal group (parks sorted by total)"
+ },
+ "data": {
+  "url": "data/park_species.csv"
+ },
+ "transform": [
+  {
+   "filter": "indexof(['Birds','Mammals','Reptiles','Frogs'],datum.class)>=0"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "count",
+     "as": "n"
+    }
+   ],
+   "groupby": [
+    "park",
+    "class"
+   ]
+  }
+ ],
+ "mark": {
+  "type": "rect",
+  "stroke": "#EDEFE8",
+  "strokeWidth": 2
+ },
+ "encoding": {
+  "x": {
+   "field": "class",
+   "type": "nominal",
+   "title": null,
+   "axis": {
+    "labelAngle": 0,
+    "orient": "top"
+   },
+   "sort": [
+    "Birds",
+    "Mammals",
+    "Reptiles",
+    "Frogs"
+   ]
+  },
+  "y": {
+   "field": "park",
+   "type": "nominal",
+   "title": null,
+   "sort": {
+    "field": "n",
+    "op": "sum",
+    "order": "descending"
+   }
+  },
+  "color": {
+   "field": "n",
+   "type": "quantitative",
+   "scale": {
+    "scheme": "yellowgreen"
+   },
+   "legend": {
+    "title": "Species"
+   }
+  },
+  "tooltip": [
+   {
+    "field": "park"
+   },
+   {
+    "field": "class",
+    "title": "Group"
+   },
+   {
+    "field": "n",
+    "title": "Species"
+   }
+  ]
+ },
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

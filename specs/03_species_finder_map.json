@@ -1,0 +1,365 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 760,
+ "height": 520,
+ "title": {
+  "text": "Where could you see it?",
+  "subtitle": "Pick an animal. Large circles are parks with many recorded sightings of it; grey dots are parks where it was not recorded."
+ },
+ "params": [
+  {
+   "name": "sp",
+   "value": "Koala",
+   "bind": {
+    "input": "select",
+    "name": "Animal: ",
+    "options": [
+     "Koala",
+     "Bare-nosed Wombat",
+     "Tasmanian Devil",
+     "Platypus",
+     "Red Kangaroo",
+     "Southern Cassowary",
+     "Superb Lyrebird",
+     "Short-beaked Echidna",
+     "Dingo"
+    ]
+   }
+  }
+ ],
+ "projection": {
+  "type": "albers",
+  "rotate": [
+   -134,
+   0
+  ],
+  "center": [
+   0,
+   -27
+  ],
+  "parallels": [
+   -18,
+   -36
+  ],
+  "scale": 800
+ },
+ "layer": [
+  {
+   "data": {
+    "url": "data/states.topojson",
+    "format": {
+     "type": "topojson",
+     "feature": "states"
+    }
+   },
+   "mark": {
+    "type": "geoshape",
+    "fill": "#DCE2D6",
+    "stroke": "#fff",
+    "strokeWidth": 1
+   }
+  },
+  {
+   "data": {
+    "url": "data/parks.csv"
+   },
+   "mark": {
+    "type": "circle",
+    "size": 40,
+    "fill": "#9aa59c"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.common==sp"
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    }
+   ],
+   "mark": {
+    "type": "circle",
+    "fill": "#C98A2B",
+    "stroke": "#fff",
+    "opacity": 0.85
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "size": {
+     "field": "records",
+     "type": "quantitative",
+     "scale": {
+      "type": "sqrt",
+      "range": [
+       80,
+       2600
+      ]
+     },
+     "legend": {
+      "title": "Sightings"
+     }
+    },
+    "tooltip": [
+     {
+      "field": "park"
+     },
+     {
+      "field": "common",
+      "title": "Animal"
+     },
+     {
+      "field": "records",
+      "title": "Sightings",
+      "format": ","
+     }
+    ]
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.common==sp"
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park!='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 0,
+    "fontSize": 10,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 3.5
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.common==sp"
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park!='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 0,
+    "fontSize": 10,
+    "fill": "#1F2A24"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.common==sp"
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park=='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 13,
+    "fontSize": 10,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 3.5
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.common==sp"
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park=='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 13,
+    "fontSize": 10,
+    "fill": "#1F2A24"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

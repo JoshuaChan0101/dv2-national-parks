@@ -1,0 +1,146 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 620,
+ "height": {
+  "step": 26
+ },
+ "title": {
+  "text": "When do visitors log wildlife?",
+  "subtitle": "Share of each park's sightings that happen in each month (parks ordered north to south)"
+ },
+ "data": {
+  "url": "data/observations.csv"
+ },
+ "transform": [
+  {
+   "filter": "datum.year<2026"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "sum",
+     "field": "records",
+     "as": "n"
+    }
+   ],
+   "groupby": [
+    "park",
+    "month"
+   ]
+  },
+  {
+   "calculate": "toNumber(datum.month)",
+   "as": "m"
+  },
+  {
+   "joinaggregate": [
+    {
+     "op": "sum",
+     "field": "n",
+     "as": "tot"
+    }
+   ],
+   "groupby": [
+    "park"
+   ]
+  },
+  {
+   "calculate": "datum.n/datum.tot*100",
+   "as": "pct"
+  },
+  {
+   "lookup": "park",
+   "from": {
+    "data": {
+     "url": "data/parks.csv"
+    },
+    "key": "park",
+    "fields": [
+     "lat",
+     "lon",
+     "state",
+     "area_ha"
+    ]
+   }
+  }
+ ],
+ "mark": {
+  "type": "rect",
+  "stroke": "#EDEFE8",
+  "strokeWidth": 2
+ },
+ "encoding": {
+  "x": {
+   "field": "m",
+   "type": "ordinal",
+   "title": null,
+   "axis": {
+    "labelAngle": 0,
+    "labelExpr": "['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][datum.value-1]"
+   },
+   "sort": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ]
+  },
+  "y": {
+   "field": "park",
+   "type": "nominal",
+   "title": null,
+   "sort": {
+    "field": "lat",
+    "op": "min",
+    "order": "descending"
+   }
+  },
+  "color": {
+   "field": "pct",
+   "type": "quantitative",
+   "scale": {
+    "scheme": "greens",
+    "domainMin": 0
+   },
+   "legend": {
+    "title": "% of sightings",
+    "format": ".0f"
+   }
+  },
+  "tooltip": [
+   {
+    "field": "park"
+   },
+   {
+    "field": "m",
+    "title": "Month"
+   },
+   {
+    "field": "pct",
+    "format": ".1f",
+    "title": "% of sightings"
+   }
+  ]
+ },
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

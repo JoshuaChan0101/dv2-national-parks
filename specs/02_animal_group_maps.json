@@ -1,0 +1,395 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 760,
+ "height": 520,
+ "title": {
+  "text": "Different parks, different animals",
+  "subtitle": "Species recorded in each park for one animal group. Choose a group; the circle scale stays the same so groups can be compared."
+ },
+ "params": [
+  {
+   "name": "grp",
+   "value": "Birds",
+   "bind": {
+    "input": "radio",
+    "name": "Animal group: ",
+    "options": [
+     "Birds",
+     "Mammals",
+     "Reptiles",
+     "Frogs"
+    ]
+   }
+  }
+ ],
+ "projection": {
+  "type": "albers",
+  "rotate": [
+   -134,
+   0
+  ],
+  "center": [
+   0,
+   -27
+  ],
+  "parallels": [
+   -18,
+   -36
+  ],
+  "scale": 800
+ },
+ "layer": [
+  {
+   "data": {
+    "url": "data/states.topojson",
+    "format": {
+     "type": "topojson",
+     "feature": "states"
+    }
+   },
+   "mark": {
+    "type": "geoshape",
+    "fill": "#DCE2D6",
+    "stroke": "#fff",
+    "strokeWidth": 1
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.class==grp"
+    },
+    {
+     "aggregate": [
+      {
+       "op": "count",
+       "as": "n"
+      }
+     ],
+     "groupby": [
+      "park"
+     ]
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    }
+   ],
+   "mark": {
+    "type": "circle",
+    "fill": "#3E6B58",
+    "stroke": "#fff",
+    "opacity": 0.8
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "size": {
+     "field": "n",
+     "type": "quantitative",
+     "scale": {
+      "type": "sqrt",
+      "domain": [
+       0,
+       400
+      ],
+      "range": [
+       10,
+       2400
+      ]
+     },
+     "legend": {
+      "title": "Species"
+     }
+    },
+    "tooltip": [
+     {
+      "field": "park",
+      "title": "Park"
+     },
+     {
+      "field": "n",
+      "title": "Species in this group"
+     }
+    ]
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.class==grp"
+    },
+    {
+     "aggregate": [
+      {
+       "op": "count",
+       "as": "n"
+      }
+     ],
+     "groupby": [
+      "park"
+     ]
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park!='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 0,
+    "fontSize": 10,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 3.5
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.class==grp"
+    },
+    {
+     "aggregate": [
+      {
+       "op": "count",
+       "as": "n"
+      }
+     ],
+     "groupby": [
+      "park"
+     ]
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park!='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 0,
+    "fontSize": 10,
+    "fill": "#1F2A24"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.class==grp"
+    },
+    {
+     "aggregate": [
+      {
+       "op": "count",
+       "as": "n"
+      }
+     ],
+     "groupby": [
+      "park"
+     ]
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park=='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 13,
+    "fontSize": 10,
+    "fill": "#fff",
+    "stroke": "#fff",
+    "strokeWidth": 3.5
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  },
+  {
+   "data": {
+    "url": "data/park_species.csv"
+   },
+   "transform": [
+    {
+     "filter": "datum.class==grp"
+    },
+    {
+     "aggregate": [
+      {
+       "op": "count",
+       "as": "n"
+      }
+     ],
+     "groupby": [
+      "park"
+     ]
+    },
+    {
+     "lookup": "park",
+     "from": {
+      "data": {
+       "url": "data/parks.csv"
+      },
+      "key": "park",
+      "fields": [
+       "lat",
+       "lon",
+       "state",
+       "area_ha"
+      ]
+     }
+    },
+    {
+     "filter": "datum.park=='Freycinet'"
+    }
+   ],
+   "mark": {
+    "type": "text",
+    "align": "left",
+    "dx": 16,
+    "dy": 13,
+    "fontSize": 10,
+    "fill": "#1F2A24"
+   },
+   "encoding": {
+    "longitude": {
+     "field": "lon",
+     "type": "quantitative"
+    },
+    "latitude": {
+     "field": "lat",
+     "type": "quantitative"
+    },
+    "text": {
+     "field": "park"
+    }
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

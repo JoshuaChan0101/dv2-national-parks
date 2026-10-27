@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Long Chan">
+<meta name="description" content="A data story about wildlife in Australia's national parks.">
+<title>Life Inside the Fence: Wildlife in Australia's National Parks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+<style>
+:root{--ink:#1F2A24;--muted:#5a665f;--bg:#EDEFE8;--gum:#3E6B58;--ochre:#C98A2B;--rule:#c9d0c4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Public Sans",sans-serif}
+main{max-width:860px;margin:0 auto;padding:0 24px 80px}
+header{padding:72px 0 40px;border-bottom:3px solid var(--gum)}
+h1{font:900 clamp(2.4rem,6vw,4rem)/1.05 Fraunces,serif;margin:0 0 20px;letter-spacing:-.02em}
+h2{font:700 1.7rem/1.2 Fraunces,serif;margin:0 0 12px}
+h3{font:700 1.1rem Fraunces,serif;margin:24px 0 6px}
+p{max-width:70ch;margin:0 0 1em}
+.lede{font:400 1.25rem/1.5 Fraunces,serif;max-width:56ch}
+.by{color:var(--muted);font-size:.9rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:32px}
+.stats b{display:block;font:900 2.2rem Fraunces,serif;color:var(--gum)}
+.stats span{font-size:.85rem;color:var(--muted)}
+section{padding:56px 0 8px;border-bottom:1px solid var(--rule)}
+figure{margin:24px 0 8px}
+figcaption{font-size:.85rem;color:var(--muted);max-width:64ch}
+.note{border-left:4px solid var(--ochre);background:#f7f5ee;padding:10px 18px;margin:20px 0;max-width:760px}
+.note p{max-width:none;margin:0;font-size:.98rem}
+footer{padding-top:40px;font-size:.85rem;color:var(--muted)}
+footer h3{color:var(--ink)} footer a{color:var(--gum)}
+.vega-bind{margin:6px 0;font-size:.9rem}
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body><main>
+
+<header>
+  <h1>Life inside the fence</h1>
+  <p class="lede">Australia protects some of its best wildlife habitat as national parks. This page compares 12 of them, from the tropical north to Tasmania: how many species each holds, 
+    which threatened animals they shelter, and when visitors spot them.</p>
+  <p class="by">By Long Chan · FIT3179 Data Visualisation 2 · Monash University · October 2026</p>
+  
+  <div class="stats">
+    <div><b>12</b><span>national parks compared</span></div>
+    <div><b>1,325</b><span>species recorded across them</span></div>
+    <div><b>108</b><span>nationally threatened species among them</span></div>
+    <div><b>1 million</b><span>sightings logged since 2000</span></div>
+  </div>
+</header>
+
+<section>
+  <h2>Which parks hold the most wildlife?</h2>
+  <p>Kakadu holds the most wildlife of the 12 parks, with 551 species recorded. Cradle Mountain-Lake St Clair holds the fewest, with 158. &ldquo;Species recorded&rdquo; means the number of
+     different birds, mammals, reptiles and frogs that people have reported seeing in the park since 2000. It is not a full count of everything that lives there. More records can also mean
+      more visitors: a park that is easy to reach and busy with people looking will log more species.</p>
+  <figure><div id="v1"></div><figcaption>Sources: Atlas of Living Australia; CAPAD 2024, DCCEEW.</figcaption></figure>
+  <figure><div id="v9"></div></figure>
+  <div class="note"><p>Bigger parks do hold more species, but only a little more. The trend line climbs slowly: a park ten times larger holds about 1.5 times as many species. Daintree, the
+     Blue Mountains and Wilsons Promontory sit well above the line, so they hold more species than their size suggests. Cradle Mountain-Lake St Clair and Karijini sit well below it. Ikara-Flinders
+      Ranges sits right on the line.</p></div>
+</section>
+
+<section>
+  <h2>Who lives where?</h2>
+  <p>The records cover four animal groups: birds, mammals, reptiles and frogs. Birds make up the largest share in every park, because they are the easiest to spot. The mix still differs from park 
+    to park. Uluru-Kata Tjuta is strong in birds, with 264 species, but weak in mammals, with only 16. It was also a surprise to find so much life in the dry middle of the continent: 356 species 
+    in total, more than the Grampians or Wilsons Promontory, and more reptiles (69) than the Blue Mountains.</p>
+  <figure><div id="v2"></div></figure>
+  <figure><div id="v4"></div></figure>
+  <p>Pick an animal below to see which parks it turns up in. The bigger the circle, the more sightings have been logged there. Grey dots are parks where it was not recorded.</p>
+  <figure><div id="v3"></div></figure>
+</section>
+
+<section>
+  <h2>Why protected areas matter</h2>
+  <p>A species is called threatened when it is at risk of dying out. Australia&rsquo;s national list has three levels: Vulnerable (a high risk), Endangered (a very high risk) and Critically 
+    Endangered (an extremely high risk). National parks matter because they give these animals safe habitat to live and breed in. Each square below is one threatened species recorded in a park. 
+    The Blue Mountains, Daintree, Kakadu and Wilsons Promontory record the most critically endangered species.</p>
+  <figure><div id="v5"></div><figcaption>Source: Atlas of Living Australia records with national conservation status.</figcaption></figure>
+  <figure><div id="v10"></div></figure>
+  <figure><div id="v6"></div></figure>
+  <div class="note"><p>Kakadu comes out on top for four of the five measures: the most species, the most sightings, the most threatened species and the largest area. But it holds the fewest species 
+    for each square kilometre. Freycinet is the opposite: the smallest park, but the most species for its size. Among the smaller parks, Wilsons Promontory stands out for threatened animals, with 
+    25 recorded.</p></div>
+</section>
+
+<section>
+  <h2>When do visitors see wildlife?</h2>
+  <p>Most sightings are logged by visitors and citizen scientists, who record what they see in apps and on websites, along with some researchers. So these charts show when and where people look, as 
+    well as where wildlife lives. Use them to plan a visit: choose a park for the animal you hope to see, then pick the darkest month for that park below. Parks in the north and inland, such as 
+    Kakadu, Kalbarri, Karijini and Ikara-Flinders Ranges, peak in the cooler months of July and August. Freycinet, Wilsons Promontory and Cradle Mountain-Lake St Clair peak over summer, and Daintree, 
+    the Grampians, Flinders Chase and Uluru-Kata Tjuta peak in October.</p>
+  <figure><div id="v8"></div></figure>
+  <figure><div id="v7"></div><figcaption>Sightings have grown since 2000, led by birds. Part of that rise is more people recording, not only more wildlife. Records for the latest years may still be 
+    incomplete because they are still being uploaded.</figcaption></figure>
+</section>
+
+<footer>
+  <h3>Data sources</h3>
+  <ul>
+    <li>CAPAD 2024, DCCEEW, <a href="https://data.gov.au/data/dataset/6f980342-3a58-4a47-adb2-a178cd6748c2">data.gov.au</a>.</li>
+    <li>Atlas of Living Australia occurrence records within each park, <a href="https://www.ala.org.au">ala.org.au</a> Downloaded on 21 October 2026.</li>
+    <li>Species Profile and Threats Database (SPRAT), DCCEEW, used to check the listing of two doubtful records.</li>
+    <li>State boundaries: <a href="https://github.com/rowanhogan/australian-states">rowanhogan/australian-states</a>, converted to TopoJSON.</li>
+  </ul>
+  <h3>Notes</h3><ul>
+    <li><b>parks.csv</b> (from CAPAD 2024 Terrestrial): kept only the national-park rows for the 12 parks and added up all pieces of each park. Area is the gazetted area, or the area calculated from the boundary where the gazetted figure was 0. The map point is the centre of each park&rsquo;s largest piece. States are written in full and columns are trimmed to park, state, area, latitude and longitude.</li>
+    <li><b>park_species.csv and observations.csv</b> (from ALA records): one download per park, clipped to the CAPAD boundary. Boundaries were simplified for 10 parks, and Daintree and the Blue Mountains were downloaded as square tiles and then clipped to the exact boundary, so a few records near park edges may be included or missed. Only birds, mammals, reptiles and frogs from 2000 onwards are kept. Records not identified to species were dropped, subspecies were merged into their species, and each species has one common name. Two Indigenous-language names were replaced with plain English names (Smoky Mouse, Northern Quoll). The time charts leave out 2026, which is an incomplete year.</li>
+    <li><b>Conservation status</b> comes from ALA&rsquo;s national status field and is applied park by park. Animals listed only at subspecies level are not counted as threatened. Two doubtful cases were checked on SPRAT: the Pilotbird is listed, so it was kept, and the Tiger Snake was set to not threatened, because only Krefft&rsquo;s Tiger Snake in the Flinders Ranges is listed.</li>
+    <li><b>states.topojson</b>: the state boundaries from the source above, converted to TopoJSON with mapshaper. Used only for the map background.</li>
+    <li><b>Limits:</b> records show where people look, so busy parks log more. ALA hides the exact locations of some sensitive species.</li>
+  </ul>
+  <h3>Author</h3><p>Long Chan · Created October 2026 for FIT3179, Monash University.</p>
+  <h3>Use of AI</h3><p>Generative AI (Claude, Anthropic) was used to help draft chart code.</p>
+</footer>
+
+</main>
+<script>
+const specs = {
+  v1:"01_richness_map", v2:"02_animal_group_maps", v3:"03_species_finder_map", v4:"04_park_group_heatmap",
+  v5:"05_threatened_waffles", v6:"06_parallel_coordinates", v7:"07_observations_streamgraph",
+  v8:"08_park_season_heatmap", v9:"09_species_area_scatter", v10:"10_most_seen_threatened"
+};
+for (const [id, f] of Object.entries(specs))
+  vegaEmbed("#"+id, "specs/"+f+".json", {actions:false}).catch(e=>console.error(f, e));
+</script>
+</body></html>

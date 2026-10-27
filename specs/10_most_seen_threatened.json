@@ -1,0 +1,135 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 560,
+ "height": {
+  "step": 24
+ },
+ "title": {
+  "text": "Threatened animals visitors see most",
+  "subtitle": "Total sightings across the parks, top 12"
+ },
+ "data": {
+  "url": "data/park_species.csv"
+ },
+ "transform": [
+  {
+   "filter": "indexof(['Critically Endangered','Endangered','Vulnerable'],datum.status)>=0"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "sum",
+     "field": "records",
+     "as": "n"
+    }
+   ],
+   "groupby": [
+    "common",
+    "status"
+   ]
+  },
+  {
+   "window": [
+    {
+     "op": "rank",
+     "as": "rk"
+    }
+   ],
+   "sort": [
+    {
+     "field": "n",
+     "order": "descending"
+    }
+   ]
+  },
+  {
+   "filter": "datum.rk<=12"
+  }
+ ],
+ "encoding": {
+  "y": {
+   "field": "common",
+   "type": "nominal",
+   "sort": "-x",
+   "title": null
+  },
+  "x": {
+   "field": "n",
+   "type": "quantitative",
+   "title": "Sightings",
+   "axis": {
+    "format": "~s",
+    "tickCount": 6
+   }
+  }
+ },
+ "layer": [
+  {
+   "mark": {
+    "type": "rule",
+    "color": "#9aa59c",
+    "strokeWidth": 2
+   },
+   "encoding": {
+    "x2": {
+     "datum": 0
+    }
+   }
+  },
+  {
+   "mark": {
+    "type": "circle",
+    "size": 170,
+    "opacity": 1
+   },
+   "encoding": {
+    "color": {
+     "field": "status",
+     "type": "nominal",
+     "scale": {
+      "domain": [
+       "Critically Endangered",
+       "Endangered",
+       "Vulnerable"
+      ],
+      "range": [
+       "#7A2E1D",
+       "#C98A2B",
+       "#8FB59C"
+      ]
+     },
+     "legend": {
+      "title": "Status"
+     }
+    },
+    "tooltip": [
+     {
+      "field": "common",
+      "title": "Animal"
+     },
+     {
+      "field": "status"
+     },
+     {
+      "field": "n",
+      "title": "Sightings",
+      "format": ","
+     }
+    ]
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}

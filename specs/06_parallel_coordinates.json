@@ -1,0 +1,268 @@
+{
+ "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ "width": 760,
+ "height": 340,
+ "title": {
+  "text": "Comparing parks side by side",
+  "subtitle": "Each line is a park. Each axis runs from the lowest park (bottom) to the highest (top). Hover a line to pick it out."
+ },
+ "data": {
+  "url": "data/park_species.csv"
+ },
+ "transform": [
+  {
+   "calculate": "indexof(['Critically Endangered','Endangered','Vulnerable'],datum.status)>=0?1:0",
+   "as": "thr"
+  },
+  {
+   "aggregate": [
+    {
+     "op": "count",
+     "as": "richness"
+    },
+    {
+     "op": "sum",
+     "field": "records",
+     "as": "obs"
+    },
+    {
+     "op": "sum",
+     "field": "thr",
+     "as": "threatened"
+    }
+   ],
+   "groupby": [
+    "park"
+   ]
+  },
+  {
+   "lookup": "park",
+   "from": {
+    "data": {
+     "url": "data/parks.csv"
+    },
+    "key": "park",
+    "fields": [
+     "lat",
+     "lon",
+     "state",
+     "area_ha"
+    ]
+   }
+  },
+  {
+   "calculate": "toNumber(datum.area_ha)",
+   "as": "area_ha"
+  },
+  {
+   "calculate": "datum.richness/(datum.area_ha/10000)",
+   "as": "per100"
+  },
+  {
+   "joinaggregate": [
+    {
+     "op": "min",
+     "field": "richness",
+     "as": "min_richness"
+    },
+    {
+     "op": "max",
+     "field": "richness",
+     "as": "max_richness"
+    },
+    {
+     "op": "min",
+     "field": "obs",
+     "as": "min_obs"
+    },
+    {
+     "op": "max",
+     "field": "obs",
+     "as": "max_obs"
+    },
+    {
+     "op": "min",
+     "field": "threatened",
+     "as": "min_threatened"
+    },
+    {
+     "op": "max",
+     "field": "threatened",
+     "as": "max_threatened"
+    },
+    {
+     "op": "min",
+     "field": "area_ha",
+     "as": "min_area_ha"
+    },
+    {
+     "op": "max",
+     "field": "area_ha",
+     "as": "max_area_ha"
+    },
+    {
+     "op": "min",
+     "field": "per100",
+     "as": "min_per100"
+    },
+    {
+     "op": "max",
+     "field": "per100",
+     "as": "max_per100"
+    }
+   ]
+  },
+  {
+   "calculate": "(datum.richness-datum.min_richness)/(datum.max_richness-datum.min_richness)",
+   "as": "n_richness"
+  },
+  {
+   "calculate": "(datum.obs-datum.min_obs)/(datum.max_obs-datum.min_obs)",
+   "as": "n_obs"
+  },
+  {
+   "calculate": "(datum.threatened-datum.min_threatened)/(datum.max_threatened-datum.min_threatened)",
+   "as": "n_threatened"
+  },
+  {
+   "calculate": "(datum.area_ha-datum.min_area_ha)/(datum.max_area_ha-datum.min_area_ha)",
+   "as": "n_area_ha"
+  },
+  {
+   "calculate": "(datum.per100-datum.min_per100)/(datum.max_per100-datum.min_per100)",
+   "as": "n_per100"
+  },
+  {
+   "fold": [
+    "n_richness",
+    "n_obs",
+    "n_threatened",
+    "n_area_ha",
+    "n_per100"
+   ]
+  },
+  {
+   "calculate": "{'n_richness':'Species recorded','n_obs':'Sightings logged','n_threatened':'Threatened species','n_area_ha':'Park size (ha)','n_per100':'Species per 100 km²'}[datum.key]",
+   "as": "axis"
+  }
+ ],
+ "encoding": {
+  "x": {
+   "field": "axis",
+   "type": "ordinal",
+   "sort": [
+    "Species recorded",
+    "Sightings logged",
+    "Threatened species",
+    "Park size (ha)",
+    "Species per 100 km²"
+   ],
+   "title": null,
+   "axis": {
+    "orient": "top",
+    "labelAngle": 0,
+    "labelLimit": 130,
+    "domain": false,
+    "grid": true,
+    "gridColor": "#9aa59c"
+   }
+  },
+  "y": {
+   "field": "value",
+   "type": "quantitative",
+   "axis": null,
+   "scale": {
+    "domain": [
+     -0.03,
+     1.03
+    ]
+   }
+  }
+ },
+ "layer": [
+  {
+   "params": [
+    {
+     "name": "hov",
+     "select": {
+      "type": "point",
+      "fields": [
+       "park"
+      ],
+      "on": "mouseover",
+      "clear": "mouseout"
+     }
+    }
+   ],
+   "mark": {
+    "type": "line",
+    "point": true,
+    "strokeWidth": 2.5
+   },
+   "encoding": {
+    "detail": {
+     "field": "park"
+    },
+    "color": {
+     "field": "state",
+     "type": "nominal",
+     "scale": {
+      "scheme": "tableau10"
+     },
+     "legend": {
+      "title": "State"
+     }
+    },
+    "opacity": {
+     "condition": {
+      "param": "hov",
+      "empty": true,
+      "value": 1
+     },
+     "value": 0.15
+    },
+    "tooltip": [
+     {
+      "field": "park"
+     },
+     {
+      "field": "richness",
+      "title": "Species recorded"
+     },
+     {
+      "field": "obs",
+      "title": "Sightings",
+      "format": ","
+     },
+     {
+      "field": "threatened",
+      "title": "Threatened species"
+     },
+     {
+      "field": "area_ha",
+      "title": "Park size (ha)",
+      "format": ","
+     },
+     {
+      "field": "per100",
+      "title": "Species per 100 km²",
+      "format": ".1f"
+     }
+    ]
+   }
+  }
+ ],
+ "config": {
+  "font": "Public Sans",
+  "view": {
+   "stroke": null
+  },
+  "title": {
+   "font": "Fraunces",
+   "fontSize": 16,
+   "anchor": "start",
+   "subtitleFontSize": 12,
+   "subtitleColor": "#5a665f"
+  }
+ }
+}
