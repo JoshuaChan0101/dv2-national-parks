@@ -79,7 +79,7 @@
    "data": {
     "values": [
      {
-      "t": "2020: bushfires and COVID-19"
+      "t": "2020: bushfires and COVID-19 closures"
      }
     ]
    },
@@ -104,14 +104,14 @@
    "data": {
     "values": [
      {
-      "t": "2020: bushfires and COVID-19"
+      "t": "2020: bushfires and COVID-19 closures"
      }
     ]
    },
    "mark": {
     "type": "text",
-    "align": "left",
-    "dx": 5,
+    "align": "right",
+    "dx": -6,
     "fontSize": 11
    },
    "encoding": {
